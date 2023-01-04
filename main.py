@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import date
 
 url = "https://odds.p.rapidapi.com/v4/sports"
 
@@ -53,7 +54,35 @@ while i < len(all_sports_key):
     url = f"https://odds.p.rapidapi.com/v4/sports/{all_sports_key[i]}/odds"
     querystring = {"regions":"us","oddsFormat":"decimal","markets":"h2h,spreads","dateFormat":"iso"}
     response = requests.request("GET", url, headers=headers, params=querystring)
-    writeFile = open(f'json_files/{all_sports_key[i]}.json', 'a+')
+    writeFile = open(f'json_files/{all_sports_key[i]}.json', 'w+')
     writeFile.write(response.text)
     writeFile.close()
     i = i + 1
+
+############################################################
+
+# EXTRACT ALL GAMES BY DATE
+# date
+# game name (team 1 vs team 2)
+# total number of games
+
+# getting date in string
+today = date.today().strftime('%m-%d-%Y')
+print(today)
+print(type(today))
+
+
+# Getting games by DATE
+i = 0
+while i < len(all_sports_key):
+    open_odds_file = open(f"json_files/{all_sports_key[i]}.json", 'r')
+    data = json.load(open_odds_file)
+    
+    # TODO - AVOIDE JSON MESSAGE FILES, len(data) should be > 0
+    
+    if len(data) >1:
+        j = 0
+        while j < len(data):
+            print(data[j]["commence_time"])
+            j = j + 1
+    i = i + 1 
