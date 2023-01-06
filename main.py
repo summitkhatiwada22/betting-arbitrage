@@ -68,21 +68,44 @@ while i < len(all_sports_key):
 
 # getting date in string
 today = date.today().strftime('%m-%d-%Y')
+'''
 print(today)
 print(type(today))
+'''
 
-
+'''
 # Getting games by DATE
 i = 0
 while i < len(all_sports_key):
     open_odds_file = open(f"json_files/{all_sports_key[i]}.json", 'r')
     data = json.load(open_odds_file)
     
-    # TODO - AVOIDE JSON MESSAGE FILES, len(data) should be > 0
-    
-    if len(data) >1:
+    if len(data) > 0 and isinstance(data, list):
         j = 0
         while j < len(data):
-            print(data[j]["commence_time"])
+            print(data[j]["commence_time"][:10])
             j = j + 1
     i = i + 1 
+'''
+
+
+# Getting number of games by DATE
+
+total_games_by_date = dict()
+
+i = 0
+while i < len(all_sports_key):
+    open_odds_file = open(f"json_files/{all_sports_key[i]}.json", 'r')
+    data = json.load(open_odds_file)
+    
+    if len(data) > 0 and isinstance(data, list):
+        j = 0
+        while j < len(data):
+            if (data[j]["commence_time"][:10]) not in total_games_by_date:
+                total_games_by_date[(data[j]["commence_time"][:10])] = 1
+            else:
+                total_games_by_date[(data[j]["commence_time"][:10])] += 1
+            j = j + 1
+    i = i + 1 
+
+print((total_games_by_date))
