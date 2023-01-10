@@ -2,6 +2,7 @@ import json
 from datetime import date
 from api import make_all_sports, make_all_sports_odd
 from classes import Game, H2H
+from arbritrage import arbritrage_calc
 
 
 def main():
@@ -106,11 +107,13 @@ def main():
         open_odds_file = open(f"json_files/{all_sports_key[i]}.json", 'r')
         data = json.load(open_odds_file)
 
+        pid = 0
         if len(data) > 0 and isinstance(data, list):
             j = 0
             while j < len(data):
                 k = 0
                 while k < len(data[j]["bookmakers"]):
+                
                     arg_id = data[j]["id"]
                     arg_sport_key = data[j]["sport_key"]
                     arg_date = data[j]["commence_time"][:10]
@@ -145,18 +148,28 @@ def main():
     ########################################################################
 
 
-    # PRINTING ALL CLASS OBJECTS - PRINT AS YOU NEED
+    # LOADING GAME IDS IN A LIST
 
+    game_ids = []
+    
     for obj in game_details:
-        print(obj.id)
-        print(obj.draw_odd)
-        print("")
+        if obj.id not in game_ids:
+            game_ids.append(obj.id)
 
-
-
+    
     ########################################################################
 
 
+    # SENDING A LIST OF EACH GAME IDS TO arbritrage_calc() FUNCTION FOR FURTHER CALCULATION
+
+    for items in game_ids:
+        id_list = []
+        for objs in game_details:
+            if items == objs.id:
+                id_list.append(objs)
+        arbritrage_calc(id_list)
+        id_list.clear()
+    
 
 ########################################################################
 
